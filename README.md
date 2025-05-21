@@ -1,7 +1,7 @@
 # Airbnb Price Predictor
 
 ## Project Overview
-This project uses machine learning techniques to predict Airbnb listing prices based on features such as room type, location, availability, and reviews. The goal is to build an interpretable and accurate pricing model by analyzing trends and applying advanced regression techniques.
+This project uses machine learning techniques to predict Airbnb listing prices based on features such as room type, location, availability, and reviews. The goal is to build an interpretable and accurate pricing model by analyzing trends and applying advanced regression techniques. note making changes 21/05/25
 
 ---
 
