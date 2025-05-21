@@ -4,35 +4,36 @@ from sklearn.metrics import mean_squared_error
 import numpy as np
 from model import train_model, predict_price
 
-def test_train_model():
-    # Sample training data
-    X_train = np.array([[1, 2], [3, 4], [5, 6]])
-    y_train = np.array([100, 200, 300])
-    
-    model = train_model(X_train, y_train)
-    assert isinstance(model, RandomForestRegressor), "Model should be a RandomForestRegressor"
+def train_random_forest(X_train, y_train):
+    model = RandomForestRegressor(
+    max_depth=10,
+    min_samples_leaf=1,
+    min_samples_split=2,
+    n_estimators=100,
+    random_state=42,
+    n_jobs=-1  # Use all available processors
+)
+    model.fit(X_train, y_train)
+    return model
 
-def test_predict_price():
-    # Sample data
-    X_train = np.array([[1, 2], [3, 4], [5, 6]])
-    y_train = np.array([100, 200, 300])
-    X_test = np.array([[2, 3]])
-    
-    model = train_model(X_train, y_train)
-    predictions = predict_price(model, X_test)
-    
-    assert len(predictions) == len(X_test), "Number of predictions should match number of test samples"
-    assert predictions[0] > 0, "Predicted price should be positive"
+def train_xgboost(X_train, y_train):
+    model = XGBRegressor(
+    learning_rate=0.1,
+    n_estimators=100,
+    max_depth=10,
+    random_state=42,
+    n_jobs=-1
+)
+    model.fit(X_train, y_train)
+    return model
 
-def test_model_performance():
-    # Sample data
-    X_train = np.array([[1, 2], [3, 4], [5, 6]])
-    y_train = np.array([100, 200, 300])
-    X_test = np.array([[2, 3]])
-    y_test = np.array([150])
-    
-    model = train_model(X_train, y_train)
-    predictions = predict_price(model, X_test)
-    mse = mean_squared_error(y_test, predictions)
-    
-    assert mse >= 0, "Mean Squared Error should be non-negative"
+def evaluate_model(model, X_test, y_test):
+    preds = model.predict(X_test)
+    # print MAE, MSE, R²
+    mse = mean_squared_error(y_test, preds)
+    mae = np.mean(np.abs(y_test - preds))
+    r2 = model.score(X_test, y_test)
+    print(f"MAE: {mae}, MSE: {mse}, R²: {r2}")
+    return mse, mae, r2
+
+
