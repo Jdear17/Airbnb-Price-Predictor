@@ -23,21 +23,23 @@ def display_data_info(df):
     print("\nData Description:")
     print(df.describe())
 
-def preprocess_data(df, target_column, categorical_features, numerical_features):
-    X = df.drop(columns=[target_column])
-    y = df[target_column]
+def preprocess_data(X,y):
+
+    categorical_features = ['room_type', 'neighbourhood']
+    numerical_features = ['availability_365', 'reviews_per_month', 'calculated_host_listings_count', 'distance_to_center']
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     preprocessor = ColumnTransformer(
         transformers=[
-            ('num', StandardScaler(), numerical_features),
             ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_features)
-        ])
+        ],
+        remainder='passthrough'  # keep numerical columns as-is
+    )
 
     pipeline = Pipeline([
         ('preprocessor', preprocessor),
-        ('model', RandomForestRegressor(random_state=42))
+        ('model', get_rf_model())
     ])
-
+    
     return pipeline, X_train, X_test, y_train, y_test
